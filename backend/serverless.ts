@@ -6,7 +6,7 @@ const serverlessConfiguration: AwsConfig.Serverless = {
   service: 'dojo-serverless-backend',
   frameworkVersion: '>=1.83',
   plugins: ['serverless-webpack', 'serverless-step-functions'],
-  configValidationMode: 'error',
+  // configValidationMode: 'error',
   provider: {
     name: 'aws',
     runtime: 'nodejs10.x',
@@ -33,6 +33,18 @@ const serverlessConfiguration: AwsConfig.Serverless = {
           http: {
             method: 'get',
             path: 'hello',
+            cors: true,
+          },
+        },
+      ],
+    },
+    virus: {
+      handler: 'virus.main',
+      events: [
+        {
+          http: {
+            method: 'get',
+            path: 'virus',
             cors: true,
           },
         },
