@@ -38,6 +38,16 @@ const serverlessConfiguration: AwsConfig.Serverless = {
         },
       ],
     },
+    createVirus: {
+      handler: 'virus.main',
+      events: [
+        {
+          schedule: {
+            rate: 'rate(1 minute)',
+          },
+        },
+      ],
+    },
     virus: {
       handler: 'virus.main',
       events: [
