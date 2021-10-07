@@ -1,3 +1,4 @@
+import { success } from '@libs/response';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 
 const viruses = [
@@ -39,15 +40,16 @@ const viruses = [
   },
 ];
 
-export const main: APIGatewayProxyHandler = async event => ({
-  statusCode: 200,
-  headers: {
-    'Access-Control-Allow-Origin': '*', // Required for CORS support to work
-    'Access-Control-Allow-Credentials': true, // Required for cookies, authorization headers with HTTPS
-  },
-  body: JSON.stringify({
-    message: 'hello from virus',
-    viruses: viruses,
+export const main: APIGatewayProxyHandler = async event => {
+  console.log('Hello world');
+  console.log(event);
+  let virusResponse = viruses;
+  if (event.queryStringParameters && event.queryStringParameters.id) {
+    virusResponse = [viruses[Number(event.queryStringParameters.id)]];
+  }
+  return success({
+    message: 'Hello from virus',
+    viruses: virusResponse,
     input: event,
-  }),
-});
+  });
+};

@@ -13,6 +13,7 @@ import virus5 from 'assets/Virus5.png';
 import virus6 from 'assets/Virus6.png';
 
 const VIRUS_ENDPOINT = '/virus';
+// const VIRUS_ENDPOINT = '/virus?id=1';
 
 const VirusImgs = [virus1, virus2, virus3, virus4, virus5, virus6];
 
