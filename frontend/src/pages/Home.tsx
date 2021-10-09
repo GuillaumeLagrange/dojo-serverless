@@ -44,8 +44,8 @@ const AddVirusButton = styled(Button)`
 
 const Virus = styled.img<VirusProps>`
   position: absolute;
-  left: ${(props) => props.positionX}%;
-  top: ${(props) => props.positionY}%;
+  left: ${props => props.positionX}%;
+  top: ${props => props.positionY}%;
   cursor: not-allowed;
 `;
 
@@ -71,13 +71,13 @@ export default () => {
   });
 
   const addVirus = async () => {
-    console.log('Implement the post route first!');
-    // const response = await fetch(
-    //   `${process.env.REACT_APP_API_BASE_URL}/virus`,
-    //   { method: 'POST' },
-    // );
-    // const { id } = await response.json();
-    // setViruses((prevViruses) => prevViruses.concat(getRandomVirus(id)));
+    const response = await fetch(
+      `${process.env.REACT_APP_API_BASE_URL}/virus`,
+      { method: 'POST' },
+    );
+    const { id } = await response.json();
+    console.log(id);
+    setViruses(prevViruses => prevViruses.concat(getRandomVirus(id)));
   };
 
   const killVirus = async (virusId: string) => {
@@ -104,7 +104,7 @@ export default () => {
       </Row>
       <Container>
         <PlayGround>
-          {viruses.map((virus) => (
+          {viruses.map(virus => (
             <Virus
               key={virus.id}
               {...virus}
