@@ -1,5 +1,5 @@
+import dynamodb from './resources/dynamodb';
 import * as AwsConfig from 'serverless/aws';
-
 import ApiGatewayErrors from './resources/apiGatewayErrors';
 
 const serverlessConfiguration: AwsConfig.Serverless = {
@@ -15,16 +15,17 @@ const serverlessConfiguration: AwsConfig.Serverless = {
     stage: 'dev',
     profile: 'dojo-serverless',
     iamRoleStatements: [
-      // {
-      //   Effect: 'Allow',
-      //   Action: [
-      //     'dynamodb:Query',
-      //     'dynamodb:PutItem',
-      //     'dynamodb:DeleteItem',
-      //     'dynamodb:ListStreams',
-      //   ],
-      //   Resource: { 'Fn::GetAtt': ['DojoServerlessTable', 'Arn'] },
-      // },
+      {
+        Effect: 'Allow',
+        Action: [
+          'dynamodb:Query',
+          'dynamodb:GetItem',
+          'dynamodb:PutItem',
+          'dynamodb:DeleteItem',
+          'dynamodb:ListStreams',
+        ],
+        Resource: { 'Fn::GetAtt': ['DojoServerlessTable', 'Arn'] },
+      },
     ],
     usagePlan: {
       quota: {
@@ -67,6 +68,9 @@ const serverlessConfiguration: AwsConfig.Serverless = {
   resources: {
     Resources: {
       ...ApiGatewayErrors,
+      DojoServerlessTable: {
+        ...dynamodb,
+      },
     },
   },
 };
