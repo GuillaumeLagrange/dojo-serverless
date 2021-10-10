@@ -1,8 +1,8 @@
+import { success } from '@libs/response';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
-
 import uuid from 'uuid';
-import { success } from '@libs/response';
+import { sendMessageToEachConnection } from '../real-time/sendMessageToClient';
 
 const documentClient = new DynamoDB.DocumentClient();
 
@@ -15,6 +15,8 @@ export const main: APIGatewayProxyHandler = async () => {
       Item: { partitionKey: 'Virus', sortKey: virusId },
     })
     .promise();
+
+  sendMessageToEachConnection({ id: virusId });
 
   return success({ id: virusId });
 };

@@ -46,8 +46,8 @@ const AddVirusButton = styled(Button)`
 
 const Virus = styled.img<VirusProps>`
   position: absolute;
-  left: ${(props) => props.positionX}%;
-  top: ${(props) => props.positionY}%;
+  left: ${props => props.positionX}%;
+  top: ${props => props.positionY}%;
   cursor: not-allowed;
 `;
 
@@ -78,23 +78,26 @@ export default () => {
       { method: 'POST' },
     );
     const { id } = await response.json();
-    setViruses((prevViruses) => prevViruses.concat(getRandomVirus(id)));
+    console.log(`Created ${id}`);
+    // setViruses(prevViruses => prevViruses.concat(getRandomVirus(id)));
   };
 
   const killVirus = async (virusId: string) => {
     await fetch(`${process.env.REACT_APP_API_BASE_URL}/virus/${virusId}`, {
       method: 'DELETE',
     });
-    setViruses((prevViruses) => prevViruses.filter(({ id }) => id !== virusId));
+    setViruses(prevViruses => prevViruses.filter(({ id }) => id !== virusId));
   };
 
-  // websocketConnexion.onmessage = (message) => {
-  //   const data = JSON.parse(message.data);
-  //   const virusId = data.virusId;
-  //   if (virusId) {
-  //     setViruses((prevViruses) => prevViruses.concat(getRandomVirus(virusId)));
-  //   }
-  // };
+  websocketConnexion.onmessage = message => {
+    const data = JSON.parse(message.data);
+    console.log('Hello from websocket');
+    console.log(data);
+    const virusId = data.id;
+    if (virusId) {
+      setViruses(prevViruses => prevViruses.concat(getRandomVirus(virusId)));
+    }
+  };
 
   return (
     <>
@@ -112,7 +115,7 @@ export default () => {
       </Row>
       <Container>
         <PlayGround>
-          {viruses.map((virus) => (
+          {viruses.map(virus => (
             <Virus
               key={virus.id}
               {...virus}

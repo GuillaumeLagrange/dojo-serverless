@@ -62,6 +62,11 @@ const serverlessConfiguration: AwsConfig.Serverless = {
             cors: true,
           },
         },
+        // {
+        //   schedule: {
+        //     rate: 'rate(1 minute)',
+        //   },
+        // },
       ],
     },
     getVirus: {
@@ -91,9 +96,28 @@ const serverlessConfiguration: AwsConfig.Serverless = {
     },
 
     //  --- WEBSOCKET ---
-    // TODO: trigger connect lambda on websocket connection
+    createConnection: {
+      handler: 'src/handlers/real-time/connect.main',
+      events: [
+        {
+          websocket: {
+            route: '$connect',
+          },
+        },
+      ],
+    },
 
     // TODO: trigger disconnect lambda on websocket disconnection
+    deleteConnection: {
+      handler: 'src/handlers/real-time/disconnect.main',
+      events: [
+        {
+          websocket: {
+            route: '$disconnect',
+          },
+        },
+      ],
+    },
 
     // sendMessageToClient: {
     //   handler: 'src/handlers/real-time/sendMessageToClient.main',
