@@ -2,7 +2,7 @@ import { success } from '@libs/response';
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { DynamoDB } from 'aws-sdk';
 import uuid from 'uuid';
-import { sendMessageToEachConnection } from '../real-time/sendMessageToClient';
+// import { sendMessageToEachConnection } from '../real-time/sendMessageToClient';
 
 const documentClient = new DynamoDB.DocumentClient();
 
@@ -16,7 +16,7 @@ export const main: APIGatewayProxyHandler = async () => {
     })
     .promise();
 
-  sendMessageToEachConnection({ id: virusId });
+  // sendMessageToEachConnection({ id: virusId });
 
   return success({ id: virusId });
 };

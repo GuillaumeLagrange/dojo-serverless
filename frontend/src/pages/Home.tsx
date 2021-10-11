@@ -86,16 +86,22 @@ export default () => {
     await fetch(`${process.env.REACT_APP_API_BASE_URL}/virus/${virusId}`, {
       method: 'DELETE',
     });
-    setViruses(prevViruses => prevViruses.filter(({ id }) => id !== virusId));
+    // setViruses(prevViruses => prevViruses.filter(({ id }) => id !== virusId));
   };
 
   websocketConnexion.onmessage = message => {
     const data = JSON.parse(message.data);
     console.log('Hello from websocket');
     console.log(data);
-    const virusId = data.id;
-    if (virusId) {
-      setViruses(prevViruses => prevViruses.concat(getRandomVirus(virusId)));
+    const addVirusId = data.addId;
+    const rmVirusId = data.removeId;
+    if (addVirusId) {
+      setViruses(prevViruses => prevViruses.concat(getRandomVirus(addVirusId)));
+    }
+    if (rmVirusId) {
+      setViruses(prevViruses =>
+        prevViruses.filter(({ id }) => id !== rmVirusId),
+      );
     }
   };
 

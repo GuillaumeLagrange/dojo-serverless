@@ -62,11 +62,11 @@ const serverlessConfiguration: AwsConfig.Serverless = {
             cors: true,
           },
         },
-        // {
-        //   schedule: {
-        //     rate: 'rate(1 minute)',
-        //   },
-        // },
+        {
+          schedule: {
+            rate: 'rate(1 minute)',
+          },
+        },
       ],
     },
     getVirus: {
@@ -80,7 +80,6 @@ const serverlessConfiguration: AwsConfig.Serverless = {
           },
         },
       ],
-      // TODO: trigger createVirus every minute
     },
     killVirus: {
       handler: 'src/handlers/virus/kill.main',
@@ -94,7 +93,6 @@ const serverlessConfiguration: AwsConfig.Serverless = {
         },
       ],
     },
-
     //  --- WEBSOCKET ---
     createConnection: {
       handler: 'src/handlers/real-time/connect.main',
@@ -106,8 +104,6 @@ const serverlessConfiguration: AwsConfig.Serverless = {
         },
       ],
     },
-
-    // TODO: trigger disconnect lambda on websocket disconnection
     deleteConnection: {
       handler: 'src/handlers/real-time/disconnect.main',
       events: [
@@ -118,20 +114,19 @@ const serverlessConfiguration: AwsConfig.Serverless = {
         },
       ],
     },
-
-    // sendMessageToClient: {
-    //   handler: 'src/handlers/real-time/sendMessageToClient.main',
-    //   events: [
-    //     {
-    //       stream: {
-    //         // @ts-ignore
-    //         type: 'dynamodb',
-    //         // @ts-ignore
-    //         arn: { 'Fn::GetAtt': ['DojoServerlessTable', 'StreamArn'] },
-    //       },
-    //     },
-    //   ],
-    // },
+    sendMessageToClient: {
+      handler: 'src/handlers/real-time/sendMessageToClient.main',
+      events: [
+        {
+          stream: {
+            // @ts-ignore
+            type: 'dynamodb',
+            // @ts-ignore
+            arn: { 'Fn::GetAtt': ['DojoServerlessTable', 'StreamArn'] },
+          },
+        },
+      ],
+    },
   },
   resources: {
     Resources: {

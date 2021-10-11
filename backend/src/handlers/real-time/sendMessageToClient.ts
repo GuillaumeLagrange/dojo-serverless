@@ -20,5 +20,21 @@ export const sendMessageToEachConnection = async (
 const isVirus = (item: Item): item is Virus => item.partitionKey === 'Virus';
 
 export const main = async (event: DynamoDBStreamEvent): Promise<void> => {
-  // TODO for each record, if it's an insertion of virus, sendMessageToEachConnection
+  console.log(event);
+
+  await Promise.all(
+    event.Records.map(record => {
+      if (record.eventName === 'INSERT') {
+        const Item = Converter.unmarshall(record.dynamodb.NewImage);
+        if (Item.partitionKey === 'Virus') {
+          return sendMessageToEachConnection({ addId: Item.sortKey });
+        }
+      } else if (record.eventName === 'REMOVE') {
+        const Item = Converter.unmarshall(record.dynamodb.OldImage);
+        if (Item.partitionKey === 'Virus') {
+          return sendMessageToEachConnection({ removeId: Item.sortKey });
+        }
+      }
+    }),
+  );
 };
