@@ -131,7 +131,7 @@ const serverlessConfiguration: AwsConfig.Serverless = {
               'arn:aws:events:#{AWS::Region}:#{AWS::AccountId}:event-bus/dojo-serverless',
             pattern: {
               source: ['dojo-serverless'],
-              'detail-type': ['LAZYNESS_DETECTED'],
+              'detail-type': ['SPREAD_REQUESTED'],
             },
           },
         },
@@ -140,7 +140,7 @@ const serverlessConfiguration: AwsConfig.Serverless = {
   },
   stepFunctions: {
     stateMachines: {
-      wait10SecondsAndDoNothing: {
+      waitAndCreateVirus: {
         events: [
           {
             cloudwatchEvent: {
@@ -148,7 +148,7 @@ const serverlessConfiguration: AwsConfig.Serverless = {
                 'arn:aws:events:#{AWS::Region}:#{AWS::AccountId}:event-bus/dojo-serverless',
               event: {
                 source: ['dojo-serverless'],
-                'detail-type': ['NOTHING_REQUESTED'],
+                'detail-type': ['VIRUS_CREATION_REQUESTED'],
               },
             },
           },
