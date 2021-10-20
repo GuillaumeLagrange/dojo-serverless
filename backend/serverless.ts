@@ -126,16 +126,14 @@ const serverlessConfiguration: AwsConfig.Serverless = {
       handler: 'src/handlers/stateMachine/spreadVirus.main',
       events: [
         {
-          eventBridge: {
-            eventBus:
-              'arn:aws:events:#{AWS::Region}:#{AWS::AccountId}:event-bus/dojo-serverless',
-            pattern: {
-              source: ['dojo-serverless'],
-              'detail-type': ['SPREAD_REQUESTED'],
-            },
+          schedule: {
+            rate: 'rate(1 minute)',
           },
         },
       ],
+    },
+    chooseWaitTime: {
+      handler: 'src/handlers/stateMachine/chooseWaitTime.main',
     },
   },
   stepFunctions: {
@@ -154,14 +152,25 @@ const serverlessConfiguration: AwsConfig.Serverless = {
           },
         ],
         definition: {
-          StartAt: 'Wait10Sec',
+          StartAt: 'ChooseWaitTime',
           States: {
-            Wait10Sec: {
-              Type: 'Wait',
-              Seconds: 10,
-              Next: 'DoNothing',
+            ChooseWaitTime: {
+              Type: 'Task',
+              // Resource:
+              // 'arn:aws:events:#{AWS::Region}:#{AWS::AccountId}:function:dojo-serverless-backend-dev-chooseWaitTime',
+              Resource: { 'Fn::GetAtt': ['chooseWaitTime', 'Arn'] },
+              Next: 'WaitBeforeCreation',
             },
-            DoNothing: { Type: 'Succeed' },
+            WaitBeforeCreation: {
+              Type: 'Wait',
+              SecondsPath: '$.waitTime',
+              Next: 'CreateVirus',
+            },
+            CreateVirus: {
+              Type: 'Task',
+              Resource: { 'Fn::GetAtt': ['createVirus', 'Arn'] },
+              End: true,
+            },
           },
         },
       },
